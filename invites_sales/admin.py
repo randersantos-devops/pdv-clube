@@ -5,11 +5,11 @@ from django.shortcuts import redirect, get_object_or_404
 from django.utils.timezone import localtime, make_aware, get_current_timezone
 
 # Importação Minha
-from .models import InviteSale
+from .models import InviteSale, InviteType
 
 @admin.register(InviteSale)
 class InviteSaleAdmin(admin.ModelAdmin):
-    list_display = ['formatted_dt_retired', 'name_guest', 'type_invite', 'doc_guest', 'gerar_comprovante_button']
+    list_display = ['formatted_dt_retired', 'name_guest', 'doc_guest', 'gerar_comprovante_button']
     readonly_fields = ['gerar_comprovante_button']
 
     def formatted_dt_retired(self, obj):
@@ -34,7 +34,7 @@ class InviteSaleAdmin(admin.ModelAdmin):
             self.message_user(request, "Comprovante gerado com sucesso.")
         except Exception as e:
             self.message_user(request, f"Erro ao gerar o comprovante: {str(e)}", level='error')
-        return redirect('/admin/invites_sales/')
+        return redirect('/admin/invites_sales/invitesale')
 
     def gerar_comprovante_button(self, obj):
         if obj.pk:  # Verifica se o objeto já foi salvo
@@ -43,3 +43,7 @@ class InviteSaleAdmin(admin.ModelAdmin):
         return "Salve a cortesia para gerar o comprovante"
 
     gerar_comprovante_button.short_description = 'Gerar Comprovante'
+
+@admin.register(InviteType)
+class InviteTypeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'price']
